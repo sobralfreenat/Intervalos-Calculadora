@@ -1,1 +1,163 @@
 
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora de Intervalos</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+  }
+  .container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  h2 {
+    text-align: center;
+    color: #333;
+  }
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+  label {
+    margin-bottom: 8px;
+    font-weight: bold;
+  }
+  select, input[type="text"], input[type="email"] {
+    margin-bottom: 16px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+  button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    align-self: flex-end; /* Alinha o botão à direita */
+  }
+  button:hover {
+    background-color: #0056b3;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<h2>Calculadora de Intervalos</h2>
+
+<form id="formCalculadora" onsubmit="return false;">
+  <label for="intervalo">Escolha o Intervalo:</label>
+  <select id="intervalo" name="intervalo">
+    <option value="21d">Intervalos de 21 dias ★★★</option>
+    <option value="15d">Intervalos de 15 dias ★★★★</option>
+    <option value="7d">Intervalos de 07 dias ★★★★★</option>
+    <option value="3d">Intervalos de 03 dias ★★★★★★</option>
+  </select>
+  <label for="periodo">Período (Meses):</label>
+  <select id="periodo" name="periodo">
+    <option value="3">3</option>
+    <option value="6">6</option>
+    <option value="9">9</option>
+    <option value="12">12</option>
+  </select>
+  <button onclick="calcularCustos()">Calcular</button>
+  <label for="custo">Custo Inicial (setup):</label>
+  <input type="text" id="custo" name="custo" readonly>
+  <label for="mensalidade">Mensalidade:</label>
+  <input type="text" id="mensalidade" name="mensalidade" readonly>
+</form>
+
+<form id="formEmail" onsubmit="return false;">
+  <label for="nome">Nome:</label>
+  <input type="text" id="nome" name="nome" required>
+  <label for="email">E-mail:</label>
+  <input type="email" id="email" name="email" required>
+  <label for="cnpj">CNPJ:</label>
+  <input type="text" id="cnpj" name="cnpj" required>
+  <button onclick="validarEnviarEmail()">Enviar E-mail</button>
+</form>
+
+</div>
+
+<script>
+function calcularCustos() {
+  var intervalo = document.getElementById("intervalo").value;
+  var periodo = parseInt(document.getElementById("periodo").value);
+  var custoInicial = 0;
+  var mensalidade = 0;
+
+  switch (intervalo) {
+    case '21d':
+      custoInicial = 9500 * periodo * 0.25;
+      mensalidade = 9500 * periodo * 0.75 / periodo;
+      break;
+    case '15d':
+      custoInicial = 12700 * periodo * 0.25;
+      mensalidade = 12700 * periodo * 0.75 / periodo;
+      break;
+    case '7d':
+      custoInicial = 16000 * periodo * 0.25;
+      mensalidade = 16000 * periodo * 0.75 / periodo;
+      break;
+    case '3d':
+      custoInicial = 25000 * periodo * 0.25;
+      mensalidade = 25000 * periodo * 0.75 / periodo;
+      break;
+    default:
+      break;
+  }
+
+  document.getElementById("custo").value = custoInicial.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' });
+  document.getElementById("mensalidade").value = mensalidade.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' });
+}
+
+function validarEnviarEmail() {
+  var nome = document.getElementById("nome").value;
+  var email = document.getElementById("email").value;
+  var cnpj = document.getElementById("cnpj").value;
+
+  if (nome.trim() === "" || email.trim() === "" || cnpj.trim() === "") {
+    alert("Por favor, preencha todos os campos antes de enviar o email.");
+  } else {
+    enviarEmail();
+  }
+}
+
+function enviarEmail() {
+  var nome = document.getElementById("nome").value;
+  var email = document.getElementById("email").value;
+  var cnpj = document.getElementById("cnpj").value;
+  var intervalo = document.getElementById("intervalo").value;
+  var periodo = document.getElementById("periodo").value;
+  var custoInicial = document.getElementById("custo").value;
+  var mensalidade = document.getElementById("mensalidade").value;
+
+  var mensagem = "Nome: " + nome + "\n" +
+                 "E-mail: " + email + "\n" +
+                 "CNPJ: " + cnpj + "\n" +
+                 "Intervalo: " + intervalo + "\n" +
+                 "Período: " + periodo + " meses\n" +
+                 "Custo Inicial: " + custoInicial + "\n" +
+                 "Mensalidade: " + mensalidade;
+
+  window.location.href = "mailto:conteudo.connection@gmail.com?subject=Pedido de Assessoria&body=" + encodeURIComponent(mensagem);
+}
+</script>
+
+</body>
+</html>

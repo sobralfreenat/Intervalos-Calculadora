@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -36,22 +35,57 @@
     margin-bottom: 16px;
     padding: 8px;
     border: 1px solid #ccc;
-    border-radius: 4px;
+    border-radius: 0px;
     font-size: 16px;
   }
   button {
     padding: 10px 20px;
-    background-color: #007bff;
+    background-color: #798ea6;
     color: #fff;
-    border: none;
-    border-radius: 4px;
-    font-size: 16px;
+    border: 4px solid #cfdc;
+    border-radius: 270px;
+    font-size: 14px;
     cursor: pointer;
     align-self: flex-end; /* Alinha o botão à direita */
   }
   button:hover {
     background-color: #0056b3;
   }
+
+/* Estilos para os botões Salvar JSON e Carregar JSON */
+#botaoSalvarJSON {
+    width: 150px;
+    padding: 10px;
+    background-color: #1b0bff;
+    color: #fff;
+    border: 1px solid black; /* Adicionando borda preta de 1px */
+    border-radius: 0px; /* Mantendo os botões com bordas arredondadas */
+    cursor: pointer;
+    margin-right: 10px;
+    transition: background-color 0.3s ease;
+}
+
+#botaoCarregarJSON {
+    width: 150px;
+    padding: 10px;
+    background-color: #c22fc7;
+    color: #fff;
+    border: 1px solid black; /* Adicionando borda preta de 1px */
+    border-radius: 0px; /* Mantendo os botões com bordas arredondadas */
+    cursor: pointer;
+    margin-right: 10px;
+    transition: background-color 0.3s ease;
+}
+
+#botaoSalvarJSON:hover {
+    background-color: #0056b3; /* Alterando a cor de fundo ao passar o mouse */
+}
+
+#botaoCarregarJSON:hover {
+    background-color: #780e69; /* Alterando a cor de fundo ao passar o mouse */
+}
+	
+
 </style>
 </head>
 <body>
@@ -91,6 +125,11 @@
   <input type="text" id="cnpj" name="cnpj" required>
   <button onclick="validarEnviarEmail()">Enviar E-mail</button>
 </form>
+
+<button id="botaoSalvarJSON" onclick="salvarJSON()">Salvar JSON</button>
+<input type="file" id="arquivoJSON" style="display: none;" onchange="lerArquivo(event)">
+<button id="botaoCarregarJSON" onclick="carregarJSON()">Carregar JSON</button>
+<input type="file" id="arquivoJSONSalvar" style="display: none;">
 
 </div>
 
@@ -156,6 +195,51 @@ function enviarEmail() {
                  "Mensalidade: " + mensalidade;
 
   window.location.href = "mailto:conteudo.connection@gmail.com?subject=Pedido de Assessoria&body=" + encodeURIComponent(mensagem);
+}
+
+function salvarJSON() {
+  var nomeDoArquivo = prompt("Por favor, insira o nome do arquivo:");
+  if (nomeDoArquivo) {
+    var dados = {
+      intervalo: document.getElementById("intervalo").value,
+      periodo: document.getElementById("periodo").value,
+      custo: document.getElementById("custo").value,
+      mensalidade: document.getElementById("mensalidade").value,
+      nome: document.getElementById("nome").value,
+      email: document.getElementById("email").value,
+      cnpj: document.getElementById("cnpj").value
+    };
+
+    var jsonDados = JSON.stringify(dados);
+    var blob = new Blob([jsonDados], { type: "application/json" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = nomeDoArquivo + ".json";
+    a.click();
+  }
+}
+
+function carregarJSON() {
+  document.getElementById("arquivoJSON").click();
+}
+
+function lerArquivo(event) {
+  var arquivo = event.target.files[0];
+  if (arquivo) {
+    var leitor = new FileReader();
+    leitor.onload = function (e) {
+      var dados = JSON.parse(e.target.result);
+      document.getElementById("intervalo").value = dados.intervalo;
+      document.getElementById("periodo").value = dados.periodo;
+      document.getElementById("custo").value = dados.custo;
+      document.getElementById("mensalidade").value = dados.mensalidade;
+      document.getElementById("nome").value = dados.nome;
+      document.getElementById("email").value = dados.email;
+      document.getElementById("cnpj").value = dados.cnpj;
+    };
+    leitor.readAsText(arquivo);
+  }
 }
 </script>
 
